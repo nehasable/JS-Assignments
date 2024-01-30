@@ -1,45 +1,55 @@
-const express = require("express");
-const jwt = require('jsonwebtoken');
-const jwtPass = "12345";
+const express=require("express")
+const jwt=require('jsonwebtoken')
+const jwtPass= "12345"
 
-const app = express();
+
+const app=express()
 app.use(express.json())
-const allUsers = [
-  {
-    username: "nehasable45@xyz",
-    password: "Neha",
-    name: "Neha"
-  },
-  {
-    username: "sable45@xyz",
-    password: "ha",
-    name: "ha"
-  }
-];
+const allUsers=[{
+username:"nehasable45@xyz",
+password:"Neha",
+name:"Neha"
 
-app.post("/signin", function(req, resp) {
-  const username = req.body.username;
-  const password = req.body.password;
+},
+{
+    username:"sable45@xyz",
+    password:"ha",
+    name:"ha"   
+}]
 
-  // Check if the user exists
-  const validUser = allUsers.find(user => user.username === username && user.password === password);
+app.post("/signin" ,function(req,resp){
+    username=req.body.username   //takes username from user in body
+    password=req.body.password
 
-  if (!validUser) {
-    return resp.status(403).json({
-      msg: "User doesn't exist or invalid credentials"
-    });
-  }
+const validUser=allUsers.find(user=> user.username === username && user.password ===password)
 
-  // User is valid, generate a token
-  const token = jwt.sign({ username }, jwtPass);
-  resp.json({ token });
-});
+    if(!validUser){
+        return resp.status(403).json({
+            msg:"user doesnt exists"
+        })
+    }
 
-app.get("/users", function(req, resp) {
-  // Placeholder for "/users" route
-  resp.send("List of users");
-});
 
-app.listen(3000, () => {
-  console.log("Server connected on port 3000");
-});
+const token=jwt.sign({password:password},jwtPass)
+return resp.json({token})
+} )
+//get verified username back using the token
+app.get("/users",function(req,resp){
+    const token=req.headers.authorization
+    try{
+    const verify=jwt.verify(token,jwtPass)
+    const username=verify.username
+    }
+    catch(err){
+return resp.status(403).json({
+    msg:"invalid"
+})
+    }
+    resp.json({
+        user:allUsers
+    })
+    
+
+})
+app.listen(3000,()=>{
+        console.log("connected")})
