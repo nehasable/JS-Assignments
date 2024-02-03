@@ -13,7 +13,7 @@ function old(age){
     }
 
 }
-app.get('./ride1',function(req,resp){
+app.get('/ride1',function(req,resp){
 if (old(req.query.age)){
     resp.json({
        msg: "qualify"})
@@ -22,4 +22,6 @@ if (old(req.query.age)){
 }
     
 })
-app.listen(3000 )
+app.listen(3000,() => {
+    console.log(`Server is running`)
+})
